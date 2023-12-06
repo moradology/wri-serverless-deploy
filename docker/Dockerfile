@@ -419,5 +419,15 @@ ENV \
   GEOS_CONFIG=$PREFIX/bin/geos-config \
   PATH=$PREFIX/bin:$PATH
 
+
+# coursier install
+RUN curl -fLo /usr/bin/coursier https://git.io/coursier-cli && chmod +x /usr/bin/coursier
+
 WORKDIR /home/hadoop
 USER hadoop:hadoop
+
+# install deps via coursier, stage them, and export updated jvm classpath
+# RUN /usr/bin/coursier fetch "org.typelevel:cats-core_2.12:1.6.0"
+COPY build_classpath.sh build_classpath.sh
+RUN bash build_classpath.sh
+ENV CLASSPATH=".:/home/hadoop/dependencies/*"

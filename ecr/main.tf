@@ -4,6 +4,10 @@ resource "aws_ecr_repository" "container_repo" {
   image_scanning_configuration {
     scan_on_push = var.scan_on_push
   }
+  tags = {
+    Name = "emr-custom-repo"
+    Terraform = true
+  }
 }
 
 resource "aws_ecr_lifecycle_policy" "repo_lifecycle_policy" {

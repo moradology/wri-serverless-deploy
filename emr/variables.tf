@@ -12,7 +12,7 @@ variable "release_label" {
 variable "architecture" {
   description = "The CPU architecture of an application. Valid values are `ARM64` or `X86_64`. Default value is `X86_64`"
   type        = string
-  default     = "ARM64"
+  default     = "X86_64"
 }
 
 variable "image_uri" {
@@ -40,15 +40,6 @@ variable "private_subnet_ids" {
 variable "emr_sg_ids" {
   type        = list(string)
   description = "ID of the EMR security group"
-}
-
-variable "tags" {
-  description = "Tags for the EMR Serverless application"
-  type        = map(string)
-  default = {
-    Terraform   = "true"
-    Environment = "dev"
-  }
 }
 
 variable "ecr_repository_name" {

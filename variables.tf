@@ -1,3 +1,10 @@
+variable "emr_name" {
+  description = "The EMR cluster name"
+  type        = string
+  default     = "deployment_test"
+
+}
+
 variable "aws_region" {
   description = "The AWS region to create resources in"
   type        = string

@@ -11,5 +11,8 @@ module "vpc" {
   enable_nat_gateway = true
   single_nat_gateway = var.single_nat_gateway
 
-  tags = var.tags
+  tags = {
+    Name = "emr-vpc"
+    Terraform = true
+  }
 }

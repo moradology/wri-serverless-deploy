@@ -17,30 +17,37 @@ resource "aws_emrserverless_application" "spark" {
     subnet_ids         = var.private_subnet_ids
     security_group_ids = var.emr_sg_ids
   }
-  tags                 = var.tags
+  tags = {
+    Name = "emr-spark"
+    Terraform = true
+  }
 }
 
-resource "aws_iam_policy" "emr_serverless_ecr_policy" {
-  name        = "emr-serverless-ecr-policy"
-  description = "Policy to grant ECR permissions to EMR Serverless"
+# Permissions for application jobs to run using custom ECR
+data "aws_iam_policy_document" "emr_serverless_ecr_policy" {
+  statement {
+    sid    = "EmrServerlessCustomImageSupport_${var.ecr_repository_name}"
+    effect = "Allow"
 
-  policy = jsonencode({
-    Version = "2012-10-17",
-    Statement = [
-      {
-        Action = [
-          "ecr:GetDownloadUrlForLayer",
-          "ecr:GetAuthorizationToken",
-          "ecr:BatchCheckLayerAvailability",
-        ],
-        Effect   = "Allow",
-        Resource = "arn:aws:ecr:${var.ecr_region}:${var.ecr_account_id}:repository/${var.ecr_repository_name}",
-      },
-    ],
-  })
+    principals {
+      type = "Service"
+      identifiers = ["emr-serverless.amazonaws.com"]
+    }
+
+    actions = [
+      "ecr:BatchGetImage",
+      "ecr:DescribeImages",
+      "ecr:GetDownloadUrlForLayer"
+    ]
+    condition {
+      test     = "StringEquals"
+      variable = "aws:SourceArn"
+      values = [aws_emrserverless_application.spark.arn]
+    }
+  }
 }
 
-resource "aws_iam_policy_attachment" "emr_serverless_ecr_policy_attachment" {
-  policy_arn = aws_iam_policy.emr_serverless_ecr_policy.arn
-  roles      = [aws_iam_role.emr_serverless_role.name]
+resource "aws_ecr_repository_policy" "emr_serverless_ecr_policy" {
+  repository = var.ecr_repository_name
+  policy     = data.aws_iam_policy_document.emr_serverless_ecr_policy.json
 }

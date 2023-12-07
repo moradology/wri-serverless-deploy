@@ -1,8 +1,8 @@
 #!/bin/bash
 
 REPO_URL=$1
-REPO_NAME=$2
-EMR_RELEASE_LABEL=$3
+REPO_NAME=$(echo "$REPO_URL" | cut -d'/' -f2)
+EMR_RELEASE_LABEL=$2
 
 echo "Building Docker image..."
 docker build -t "${REPO_NAME}:latest" ./docker

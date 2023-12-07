@@ -417,8 +417,11 @@ ENV \
   PROJ_LIB=$PREFIX/share/proj \
   GDAL_CONFIG=$PREFIX/bin/gdal-config \
   GEOS_CONFIG=$PREFIX/bin/geos-config \
-  PATH=$PREFIX/bin:$PATH
+  PATH=$PREFIX/bin:$PATH \
+  LD_LIBRARY_PATH=/opt/lib
 
+# Linkage for gdal
+RUN echo '/opt/lib' >> /etc/ld.so.conf && ldconfig
 
 # coursier install
 RUN curl -fLo /usr/bin/coursier https://git.io/coursier-cli && chmod +x /usr/bin/coursier

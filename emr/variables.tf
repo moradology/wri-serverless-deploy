@@ -23,13 +23,13 @@ variable "image_uri" {
 variable "max_cpu" {
   description = "Maximum cpu capacity configuration for the EMR Serverless application"
   type        = string
-  default     = "48 vCPU"
+  default     = "100 vCPU"
 }
 
 variable "max_memory" {
   description = "Maximum memory capacity configuration for the EMR Serverless application"
   type        = string
-  default     = "144 GB"
+  default     = "300 GB"
 }
 
 variable "private_subnet_ids" {

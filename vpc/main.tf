@@ -13,6 +13,5 @@ module "vpc" {
 
   tags = {
     Name = "emr-vpc"
-    Terraform = true
   }
 }

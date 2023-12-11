@@ -4,9 +4,9 @@ resource "aws_ecr_repository" "container_repo" {
   image_scanning_configuration {
     scan_on_push = var.scan_on_push
   }
+  force_delete = var.force_delete_ecr
   tags = {
     Name = "emr-custom-repo"
-    Terraform = true
   }
 }
 

@@ -47,12 +47,22 @@ variable "ecr_repository_name" {
   type = string
 }
 
-variable "ecr_region" {
+variable "region" {
   description = "AWS region where the ECR repository is located"
   type = string
 }
 
-variable "ecr_account_id" {
+variable "account_id" {
   description = "AWS account ID where the ECR repository is located"
   type = string
+}
+
+variable "execution_role_template" {
+  description = "Path to the template file defining an emr execution role to be created"
+  type        = string
+}
+
+variable "cross_account_role_arn" {
+  description = "ARN of an IAM role for cross-account permissions"
+  type        = string
 }

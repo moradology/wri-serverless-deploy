@@ -23,6 +23,5 @@ resource "aws_security_group" "emr_network_sg" {
 
   tags = {
     Name = "emr-network-sg"
-    Terraform = true
   }
 }

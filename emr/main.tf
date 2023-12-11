@@ -1,5 +1,6 @@
+# The EMR serverless application
 resource "aws_emrserverless_application" "spark" {
-  name                 = var.name
+  name                 = "${var.name}_${terraform.workspace}"
   type                 = "spark"
   release_label        = var.release_label
 
@@ -19,14 +20,13 @@ resource "aws_emrserverless_application" "spark" {
   }
   tags = {
     Name = "emr-spark"
-    Terraform = true
   }
 }
 
 # Permissions for application jobs to run using custom ECR
 data "aws_iam_policy_document" "emr_serverless_ecr_policy" {
   statement {
-    sid    = "EmrServerlessCustomImageSupport_${var.ecr_repository_name}"
+    sid    = "EmrImageSupport_${var.ecr_repository_name}_${terraform.workspace}"
     effect = "Allow"
 
     principals {
@@ -50,4 +50,46 @@ data "aws_iam_policy_document" "emr_serverless_ecr_policy" {
 resource "aws_ecr_repository_policy" "emr_serverless_ecr_policy" {
   repository = var.ecr_repository_name
   policy     = data.aws_iam_policy_document.emr_serverless_ecr_policy.json
+}
+
+# Execution role (permissions for actual job runs)
+data "template_file" "execution_role_policy" {
+  template = file(var.execution_role_template)
+
+  vars = {
+    region = var.region
+    account_id = var.account_id
+    assume_role_arn = var.cross_account_role_arn
+  }
+}
+
+resource "aws_iam_policy" "emr_execution_policy" {
+  name        = "EMRExecutionPolicy_${terraform.workspace}"
+  description = "Custom IAM policy for EMR execution role"
+
+  policy = "${data.template_file.execution_role_policy.rendered}"
+}
+
+# trust policy (allow principal to delegate iam role)
+data "aws_iam_policy_document" "emr_trust_policy" {
+  statement {
+    actions = ["sts:AssumeRole"]
+
+    principals {
+      type        = "Service"
+      identifiers = ["emr-serverless.amazonaws.com"]
+    }
+  }
+}
+
+
+resource "aws_iam_role" "execution_role" {
+  name = "EMRExecutionRole_${terraform.workspace}"
+  assume_role_policy = data.aws_iam_policy_document.emr_trust_policy.json
+}
+
+resource "aws_iam_policy_attachment" "execution_role_policy_attachment" {
+  name       = "EMRExecutionRolePolicyAttachment"
+  roles      = [aws_iam_role.execution_role.name]
+  policy_arn = aws_iam_policy.emr_execution_policy.arn
 }

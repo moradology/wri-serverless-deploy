@@ -1,6 +1,6 @@
 # The EMR serverless application
 resource "aws_emrserverless_application" "spark" {
-  name                 = "${var.name}_${terraform.workspace}"
+  name                 = "${var.name}"
   type                 = "spark"
   release_label        = var.release_label
 

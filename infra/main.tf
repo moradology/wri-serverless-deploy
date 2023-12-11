@@ -19,6 +19,7 @@ locals {
 }
 
 # Fail if workspace is not set
+# For details: https://developer.hashicorp.com/terraform/language/state/workspaces#using-workspaces
 resource "null_resource" "fail_if_default_workspace" {
   triggers = {
     is_default_workspace = local.is_default_workspace

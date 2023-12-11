@@ -18,9 +18,6 @@ resource "aws_emrserverless_application" "spark" {
     subnet_ids         = var.private_subnet_ids
     security_group_ids = var.emr_sg_ids
   }
-  tags = {
-    Name = "emr-spark"
-  }
 }
 
 # Permissions for application jobs to run using custom ECR

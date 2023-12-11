@@ -5,9 +5,6 @@ resource "aws_ecr_repository" "container_repo" {
     scan_on_push = var.scan_on_push
   }
   force_delete = var.force_delete_ecr
-  tags = {
-    Name = "emr-custom-repo"
-  }
 }
 
 resource "aws_ecr_lifecycle_policy" "repo_lifecycle_policy" {

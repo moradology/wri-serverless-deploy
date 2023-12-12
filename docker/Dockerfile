@@ -1,4 +1,3 @@
-# Dockerfile
 FROM public.ecr.aws/emr-serverless/spark/emr-6.12.0:latest as builder
 
 USER root

@@ -7,11 +7,21 @@ on:
       - develop
 
 jobs:
+  pr-check:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check base branch
+      run: |
+        if [ "$GITHUB_BASE_REF" != "main" ] || [ "$GITHUB_HEAD_REF" != "dev" ]; then
+          echo "PRs to main must be from dev branch"
+          exit 1
+        fi
+
   deploy:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout Repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
 
     # change this depending on security policies, see: https://github.com/aws-actions/configure-aws-credentials 
     - name: Set up AWS Credentials

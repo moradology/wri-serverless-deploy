@@ -72,6 +72,7 @@ Replace the placeholders with actual job details. `entryPointArguments` should b
 
 ### Deployment Process
 
+0. **Backend setup** S3 backed terraform deployments allow us to keep the state file out of version control. `infra/setup_backend.sh` does this in an idempotent fashion, so it should be safe for use in CI/CD.
 1. **Initialize**: Automatically initializes the Terraform environment.
 2. **Workspace Selection**: Select or create a workspace for your target environment.
 3. **Plan and Apply**: Review and apply Terraform configurations to deploy the GDAL+EMR Serverless application.
@@ -87,5 +88,5 @@ Enhance the deployment process, add features, or improve the GDAL+EMR Serverless
 
 ## Important Notes
 
-- **Variable Files**: Ensure workspace-specific variable files are correctly named and located in the `./infra` directory.
+- **Variable Files**: Ensure workspace-specific variable files are correctly named and located in the `./infra` directory. These can live in version control for use in CI/CD
 - **Credentials and Secrets**: Handle AWS credentials and sensitive data securely, especially when using the job submission script.

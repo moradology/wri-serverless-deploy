@@ -47,7 +47,7 @@ module "ecr" {
 # Build container and push it
 resource "null_resource" "build_and_push_image" {
   provisioner "local-exec" {
-    command = "bash ../manage_docker.sh push ${module.ecr.repository_url} ${var.emr_release_label}"
+    command = "bash infra/manage_docker.sh push ${module.ecr.repository_url} ${var.emr_release_label}"
   }
   depends_on = [null_resource.fail_if_default_workspace]
 }

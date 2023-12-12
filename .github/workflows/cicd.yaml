@@ -16,13 +16,20 @@ jobs:
     - name: Set up Terraform
       uses: hashicorp/setup-terraform@v1
 
+    - name: Clear Terraform Cache
+      run: |
+        cd infra
+        rm -rf .terraform
+
     - name: Terraform Init and Apply
       run: |
         cd infra
         if [ "$GITHUB_REF" == "refs/heads/main" ]; then
+          terraform init
           terraform workspace select prod
           terraform apply -auto-approve -var-file="prod.tfvars"
         elif [ "$GITHUB_REF" == "refs/heads/develop" ]; then
+          terraform init
           terraform workspace select dev
           terraform apply -auto-approve -var-file="dev.tfvars"
         fi

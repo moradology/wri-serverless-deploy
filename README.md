@@ -55,6 +55,12 @@ Switch to an existing workspace:
 
 As part of the infrastructure setup, Docker images are built and pushed. This is integrated into the Terraform apply process managed by the `tf` script.
 
+Push an updated docker image:
+
+```bash
+./tf update_image
+```
+
 ### Deployment Process
 
 1. **Initialize**: Initialize the Terraform environment (done automatically by the `tf` script).
